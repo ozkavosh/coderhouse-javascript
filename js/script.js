@@ -66,7 +66,7 @@ const buscarProductos = (e) => {
   if (!e.target.matches(".btnBuscar")) return;
   e.preventDefault();
   //Busca un producto y lo renderiza si lo encuentra
-  let busqueda = d.getElementById("inputBuscar").value.toLowerCase();
+  let busqueda = inputBuscar.value.toLowerCase();
 
   if (!busqueda) return renderProductos(); //Si no se ingreso nada al input no hace falta buscar
 
