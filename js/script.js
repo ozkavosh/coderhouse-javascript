@@ -6,6 +6,38 @@ const valorRango = d.getElementById("valorRangoFiltro");
 const contenedorProductos = d.getElementById("contenedorProductos");
 const inputBuscar = d.getElementById("inputBuscar");
 
+const alertErrorBusqueda = {
+  title: "Error al buscar",
+  text: "No se encontraron productos relacionados con la busqueda!",
+  icon: "error",
+  button: "Aceptar",
+};
+
+const alertErrorFiltro = {
+  title: "Error al filtrar",
+  text: "No se encontraron productos con estos filtros!",
+  icon: "error",
+  button: "Aceptar",
+};
+
+const alertExitoCompra = {
+  title: "Compra exitosa",
+  text: "Gracias por tu compra!",
+  icon: "success",
+  button: "Aceptar",
+};
+
+const alertErrorCompra = {
+  title: "Error al comprar",
+  text: "Su carrito esta vacio!",
+  icon: "error",
+  button: "Aceptar",
+};
+
+//Instanciamos el carrito
+const carrito = new Carrito(JSON.parse(localStorage.getItem("cart")) || []);
+
+/*Funciones para eventos*/
 const crearProductos = (arrayProductos) => {
   //Crea productos dado un array dentro del contenedor de productos
   //La plantilla de cada producto es devuelta por la funcion productCard dentro de dynamicElements.js
@@ -26,10 +58,6 @@ const renderProductos = () => {
   });
 };
 
-//Instanciamos el carrito
-const carrito = new Carrito(JSON.parse(localStorage.getItem("cart")) || []);
-
-/*Funciones para eventos*/
 const renderRangoFiltro = ({ target: objetivo }) => {
   if (!objetivo.matches("#rangoPrecio")) return;
   //Muestra el valor del rango.
@@ -56,7 +84,7 @@ const agregarAlCarrito = ({
       name,
       price,
       quantity: cantidad,
-      id: productoId
+      id: productoId,
     });
 
     Toastify({
@@ -84,7 +112,7 @@ const eliminarDelCarrito = ({
 };
 
 const buscarProductos = (e) => {
-  if (!e.target.matches(".btnBuscar")) return;
+  if (!e.target.matches(".btnBuscar") && !e.target.matches(".fa-search")) return;
   e.preventDefault();
   //Busca un producto y lo renderiza si lo encuentra
   const busqueda = inputBuscar.value.toLowerCase();
@@ -95,24 +123,15 @@ const buscarProductos = (e) => {
 
   fetchProductos().then((productos) => {
     if (
-      productos.some((producto) =>
-        producto.name.toLowerCase().includes(busqueda)
-      )
+      productos.some((producto) => producto.name.toLowerCase().includes(busqueda))
     ) {
       const producto = d.createElement("div");
       producto.className = "col";
-      const filtro = productos.filter((producto) =>
-        producto.name.toLowerCase().includes(busqueda)
-      );
+      const filtro = productos.filter((producto) => producto.name.toLowerCase().includes(busqueda));
 
       crearProductos(filtro);
     } else {
-      swal({
-        title: "Error al buscar",
-        text: "No se encontraron productos relacionados con tu busqueda!",
-        icon: "error",
-        button: "Aceptar",
-      });
+      swal(alertErrorBusqueda);
       renderProductos();
     }
   });
@@ -153,21 +172,12 @@ const filtrarProductos = (e) => {
       return e.target.matches(".form-check-input")
         ? producto.category === radioSeleccionado.value
         : radioSeleccionado
-          ? producto.category === radioSeleccionado.value && producto.price <= precioMaximo
-          : producto.price <= precioMaximo
-    })
+        ? producto.category === radioSeleccionado.value &&
+          producto.price <= precioMaximo
+        : producto.price <= precioMaximo;
+    });
 
-    if (filtro.length > 0) {
-      crearProductos(filtro);
-    } else {
-      swal({
-        title: "Error al filtrar",
-        text: "No se encontraron productos con estos filtros!",
-        icon: "error",
-        button: "Aceptar",
-      });
-      renderProductos();
-    }
+    filtro.length ? crearProductos(filtro) : (swal(alertErrorFiltro), renderProductos());
   });
 };
 
@@ -175,26 +185,9 @@ const finalizarCompra = (e) => {
   if (!e.target.matches(".btnComprar")) return;
   e.preventDefault();
 
-  const exito = {
-    title: "Compra exitosa",
-    text: "Gracias por tu compra!",
-    icon: "success",
-    button: "Aceptar",
-  };
-
-  const error = {
-    title: "Error al comprar",
-    text: "Su carrito esta vacio!",
-    icon: "error",
-    button: "Aceptar",
-  };
-
-  if (carrito.getCantidadProductos()) {
-    swal(exito);
-    carrito.vaciarCarrito();
-  } else {
-    swal(error);
-  }
+  carrito.getCantidadProductos()
+    ? (swal(alertExitoCompra), carrito.vaciarCarrito())
+    : swal(alertErrorCompra);
 };
 
 /*Bindeo a eventos*/
