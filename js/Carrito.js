@@ -23,24 +23,26 @@ class Carrito {
   };
 
   cargarProducto = (nuevoProducto) => {
-    //Buscamos si existe el producto en el carrito y al mismo tiempo obtenemos el indice
-    let indice = this.productos.indexOf(
-      this.productos.find((producto) => producto.name === nuevoProducto.name)
-    );
-    if (indice !== -1) {
-      this.productos[indice].quantity += nuevoProducto.quantity;
-    } else {
-      this.productos.push(nuevoProducto);
-    }
+    this.productos = this.productos.some(
+      (producto) => producto.id == nuevoProducto.id
+    )
+      ? this.productos.map((producto) =>
+          producto.id == nuevoProducto.id
+            ? {
+                ...producto,
+                quantity: producto.quantity + nuevoProducto.quantity,
+              }
+            : producto
+        )
+      : [...this.productos, nuevoProducto];
+
     this.renderCarrito();
   };
 
   guardarLocal = () => {
-    if (this.productos.length > 0) {
-      localStorage.setItem("cart", JSON.stringify(this.productos));
-    } else {
-      localStorage.removeItem("cart");
-    }
+    this.productos.length > 0
+      ? localStorage.setItem("cart", JSON.stringify(this.productos))
+      : localStorage.removeItem("cart");
   };
 
   eliminarProducto = (productoIndice) => {

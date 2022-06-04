@@ -27,46 +27,67 @@ const renderProductos = () => {
 };
 
 //Instanciamos el carrito
-const carrito = new Carrito(
-  localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : []
-);
+const carrito = new Carrito(JSON.parse(localStorage.getItem("cart")) || []);
 
 /*Funciones para eventos*/
-const renderRangoFiltro = (e) => {
-  if (!e.target.matches("#rangoPrecio")) return;
+const renderRangoFiltro = ({ target: objetivo }) => {
+  if (!objetivo.matches("#rangoPrecio")) return;
   //Muestra el valor del rango.
   valorRango.value = rangoFiltro.value;
 };
 
-const agregarAlCarrito = (e) => {
+const agregarAlCarrito = ({
+  target: objetivo,
+  srcElement: {
+    dataset: { id },
+  },
+}) => {
   //Agrega un producto al carrito, despues renderiza
-  if (!e.target.matches(".btnAgregar")) return;
-  const productoId = Number(e.srcElement.dataset.id);
+  if (!objetivo.matches(".btnAgregar")) return;
+  const productoId = Number(id);
   const cantidad = Number(d.getElementById(`inputCantidad${productoId}`).value);
 
   fetchProductos().then((productos) => {
-    const producto = productos.find((producto) => producto.id === productoId);
+    const { name, price } = productos.find(
+      (producto) => producto.id === productoId
+    );
 
     carrito.cargarProducto({
-      name: producto.name,
-      price: producto.price,
+      name,
+      price,
       quantity: cantidad,
+      id: productoId
     });
+
+    Toastify({
+      text: `Se agregó ${cantidad} producto${
+        cantidad > 1 ? "s" : ""
+      } al carrito!`,
+      style: {
+        background: "linear-gradient(to right, #00b09b, #96c93d)",
+      },
+      duration: 1000,
+      close: true,
+    }).showToast();
   });
 };
 
-const eliminarDelCarrito = (e) => {
-  if (!e.target.matches(".btnEliminar")) return;
+const eliminarDelCarrito = ({
+  target: objetivo,
+  srcElement: {
+    dataset: { id },
+  },
+}) => {
+  if (!objetivo.matches(".btnEliminar")) return;
   //Elimina un producto del carrito, despues renderiza
-  const id = Number(e.srcElement.dataset.id);
-  carrito.eliminarProducto(id);
+  carrito.eliminarProducto(Number(id));
 };
 
 const buscarProductos = (e) => {
   if (!e.target.matches(".btnBuscar")) return;
   e.preventDefault();
   //Busca un producto y lo renderiza si lo encuentra
-  let busqueda = inputBuscar.value.toLowerCase();
+  const busqueda = inputBuscar.value.toLowerCase();
 
   if (!busqueda) return renderProductos(); //Si no se ingreso nada al input no hace falta buscar
 
@@ -86,10 +107,12 @@ const buscarProductos = (e) => {
 
       crearProductos(filtro);
     } else {
-      const myModal = new bootstrap.Modal(d.getElementById("busquedaModal"), {
-        focus: true,
+      swal({
+        title: "Error al buscar",
+        text: "No se encontraron productos relacionados con tu busqueda!",
+        icon: "error",
+        button: "Aceptar",
       });
-      myModal.show();
       renderProductos();
     }
   });
@@ -145,10 +168,12 @@ const filtrarProductos = (e) => {
     if (filtro.length > 0) {
       crearProductos(filtro);
     } else {
-      const myModal = new bootstrap.Modal(d.getElementById("filtroModal"), {
-        focus: true,
+      swal({
+        title: "Error al filtrar",
+        text: "No se encontraron productos con estos filtros!",
+        icon: "error",
+        button: "Aceptar",
       });
-      myModal.show();
       renderProductos();
     }
   });
@@ -157,12 +182,26 @@ const filtrarProductos = (e) => {
 const finalizarCompra = (e) => {
   if (!e.target.matches(".btnComprar")) return;
   e.preventDefault();
-  if (carrito.getCantidadProductos() > 0) {
-    const myModal = new bootstrap.Modal(d.getElementById("compraModal"), {
-      focus: true,
-    });
-    myModal.show();
+
+  const exito = {
+    title: "Compra exitosa",
+    text: "Gracias por tu compra!",
+    icon: "success",
+    button: "Aceptar",
+  };
+
+  const error = {
+    title: "Error al comprar",
+    text: "Su carrito esta vacio!",
+    icon: "error",
+    button: "Aceptar",
+  };
+
+  if (carrito.getCantidadProductos()) {
+    swal(exito);
     carrito.vaciarCarrito();
+  } else {
+    swal(error);
   }
 };
 
