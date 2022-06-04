@@ -149,21 +149,13 @@ const filtrarProductos = (e) => {
     const producto = d.createElement("div");
     producto.className = "col";
 
-    let filtro;
-
-    if (e.target.matches(".form-check-input")) {
-      filtro = productos.filter(
-        (producto) => producto.category === radioSeleccionado.value
-      );
-    } else if (radioSeleccionado) {
-      filtro = productos.filter(
-        (producto) =>
-          producto.category === radioSeleccionado.value &&
-          producto.price <= precioMaximo
-      );
-    } else {
-      filtro = productos.filter((producto) => producto.price <= precioMaximo);
-    }
+    const filtro = productos.filter((producto) => {
+      return e.target.matches(".form-check-input")
+        ? producto.category === radioSeleccionado.value
+        : radioSeleccionado
+          ? producto.category === radioSeleccionado.value && producto.price <= precioMaximo
+          : producto.price <= precioMaximo
+    })
 
     if (filtro.length > 0) {
       crearProductos(filtro);
