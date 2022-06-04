@@ -6,6 +6,16 @@ const valorRango = d.getElementById("valorRangoFiltro");
 const contenedorProductos = d.getElementById("contenedorProductos");
 const inputBuscar = d.getElementById("inputBuscar");
 
+const fetchProductos = async () => {
+  try {
+    const productos = await fetch("./js/productos.json");
+    return await productos.json();
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
 const alertErrorBusqueda = {
   title: "Error al buscar",
   text: "No se encontraron productos relacionados con la busqueda!",
@@ -41,6 +51,7 @@ const carrito = new Carrito(JSON.parse(localStorage.getItem("cart")) || []);
 const crearProductos = (arrayProductos) => {
   //Crea productos dado un array dentro del contenedor de productos
   //La plantilla de cada producto es devuelta por la funcion productCard dentro de dynamicElements.js
+  contenedorProductos.innerHTML = "";
   for (let p of arrayProductos) {
     const producto = d.createElement("div");
     producto.className = "col";
@@ -49,13 +60,10 @@ const crearProductos = (arrayProductos) => {
   }
 };
 
-const renderProductos = () => {
+const renderProductos = async () => {
   //Renderiza los productos dentro del contenedor de productos.
-  contenedorProductos.innerHTML = "";
-
-  fetchProductos().then((productos) => {
-    crearProductos(productos);
-  });
+  const productos = await fetchProductos();
+  crearProductos(productos);
 };
 
 const renderRangoFiltro = ({ target: objetivo }) => {
@@ -64,7 +72,7 @@ const renderRangoFiltro = ({ target: objetivo }) => {
   valorRango.value = rangoFiltro.value;
 };
 
-const agregarAlCarrito = ({
+const agregarAlCarrito = async ({
   target: objetivo,
   srcElement: {
     dataset: { id },
@@ -74,30 +82,29 @@ const agregarAlCarrito = ({
   if (!objetivo.matches(".btnAgregar")) return;
   const productoId = Number(id);
   const cantidad = Number(d.getElementById(`inputCantidad${productoId}`).value);
+  const productos = await fetchProductos();
 
-  fetchProductos().then((productos) => {
-    const { name, price } = productos.find(
-      (producto) => producto.id === productoId
-    );
+  const { name, price } = productos.find(
+    (producto) => producto.id === productoId
+  );
 
-    carrito.cargarProducto({
-      name,
-      price,
-      quantity: cantidad,
-      id: productoId,
-    });
-
-    Toastify({
-      text: `Se agregó ${cantidad} producto${
-        cantidad > 1 ? "s" : ""
-      } al carrito!`,
-      style: {
-        background: "linear-gradient(to right, #00b09b, #96c93d)",
-      },
-      duration: 1000,
-      close: true,
-    }).showToast();
+  carrito.cargarProducto({
+    name,
+    price,
+    quantity: cantidad,
+    id: productoId,
   });
+
+  Toastify({
+    text: `Se agregó ${cantidad} producto${
+      cantidad > 1 ? "s" : ""
+    } al carrito!`,
+    style: {
+      background: "linear-gradient(to right, #00b09b, #96c93d)",
+    },
+    duration: 1000,
+    close: true,
+  }).showToast();
 };
 
 const eliminarDelCarrito = ({
@@ -111,30 +118,26 @@ const eliminarDelCarrito = ({
   carrito.eliminarProducto(Number(id));
 };
 
-const buscarProductos = (e) => {
-  if (!e.target.matches(".btnBuscar") && !e.target.matches(".fa-search")) return;
+const buscarProductos = async (e) => {
+  if (!e.target.matches(".btnBuscar") && !e.target.matches(".fa-search"))
+    return;
   e.preventDefault();
   //Busca un producto y lo renderiza si lo encuentra
   const busqueda = inputBuscar.value.toLowerCase();
-
   if (!busqueda) return renderProductos(); //Si no se ingreso nada al input no hace falta buscar
+  const productos = await fetchProductos();
 
-  contenedorProductos.innerHTML = "";
-
-  fetchProductos().then((productos) => {
-    if (
-      productos.some((producto) => producto.name.toLowerCase().includes(busqueda))
-    ) {
-      const producto = d.createElement("div");
-      producto.className = "col";
-      const filtro = productos.filter((producto) => producto.name.toLowerCase().includes(busqueda));
-
-      crearProductos(filtro);
-    } else {
-      swal(alertErrorBusqueda);
-      renderProductos();
-    }
-  });
+  if (
+    productos.some((producto) => producto.name.toLowerCase().includes(busqueda))
+  ) {
+    const filtro = productos.filter((producto) =>
+      producto.name.toLowerCase().includes(busqueda)
+    );
+    crearProductos(filtro);
+  } else {
+    swal(alertErrorBusqueda);
+    renderProductos();
+  }
 };
 
 const limpiarBusqueda = (e) => {
@@ -151,7 +154,7 @@ const limpiarBusqueda = (e) => {
   renderProductos();
 };
 
-const filtrarProductos = (e) => {
+const filtrarProductos = async (e) => {
   if (
     !e.target.matches(".btnFiltrar") &&
     !e.target.matches(".form-check-input")
@@ -161,24 +164,20 @@ const filtrarProductos = (e) => {
   //Filtra y renderiza los productos segun los parametros ingresados
   const radioSeleccionado = d.querySelector(".form-check-input:checked");
   const precioMaximo = Number(rangoFiltro.value);
+  const productos = await fetchProductos();
 
-  contenedorProductos.innerHTML = "";
-
-  fetchProductos().then((productos) => {
-    const producto = d.createElement("div");
-    producto.className = "col";
-
-    const filtro = productos.filter((producto) => {
-      return e.target.matches(".form-check-input")
-        ? producto.category === radioSeleccionado.value
-        : radioSeleccionado
-        ? producto.category === radioSeleccionado.value &&
-          producto.price <= precioMaximo
-        : producto.price <= precioMaximo;
-    });
-
-    filtro.length ? crearProductos(filtro) : (swal(alertErrorFiltro), renderProductos());
+  const filtro = productos.filter((producto) => {
+    return e.target.matches(".form-check-input")
+      ? producto.category === radioSeleccionado.value
+      : radioSeleccionado
+      ? producto.category === radioSeleccionado.value &&
+        producto.price <= precioMaximo
+      : producto.price <= precioMaximo;
   });
+
+  filtro.length
+    ? crearProductos(filtro)
+    : (swal(alertErrorFiltro), renderProductos());
 };
 
 const finalizarCompra = (e) => {
