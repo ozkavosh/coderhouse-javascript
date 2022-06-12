@@ -9,7 +9,7 @@ const cartRow = ({name, price, quantity}, index) => {
 };
 
 const productCard = ({name, price, description, id, thumbnailUrl}) => {
-  return `<div class="card" style="width: 18rem">
+  return `<div class="card" style="width: 18rem; height: 38rem">
           <img
             src=${thumbnailUrl}
             class="card-img-top"
@@ -35,7 +35,7 @@ const productCard = ({name, price, description, id, thumbnailUrl}) => {
               />
             </li>
             <li class="list-group-item">
-              <a href="#" class="btn btn-dark btnAgregar" data-id=${id}>Agregar al carrito</a>
+              <a href="#" class="btn btn-warning btnAgregar" data-id=${id}>Agregar al carrito</a>
             </li>
           </ul>
         </div>`;

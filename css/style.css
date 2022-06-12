@@ -1,0 +1,37 @@
+.imgMoto{
+    position: relative;
+    top: 2rem;
+}
+
+#btnCarrito{
+    font-size: 25px;
+    padding: 1rem;
+    position: fixed;
+    top: 90%;
+    left: 95%;
+    z-index: 999;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #888;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #f47c3c;
+    border-radius: 3rem;
+  }
+
+.contenedorBanner{
+    height: fit-content;
+    background-image: url('../assets/img/fondo.jpg');
+}
+
+@media screen and (max-width: 1399px) {
+    .imgMoto{
+        position: static;
+    }
+}
