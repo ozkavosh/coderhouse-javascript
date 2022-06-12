@@ -5,11 +5,8 @@ class Carrito {
   }
 
   renderTotal = () => {
-    const bruto = d.getElementById("carritoBruto");
-    const neto = d.getElementById("carritoNeto");
-
-    bruto.innerText = this.getTotalBruto();
-    neto.innerText = this.getTotalNeto();
+    const total = d.getElementById("carritoTotal");
+    total.innerText = this.getTotalNeto().toFixed(2);
   };
 
   renderCarrito = () => {

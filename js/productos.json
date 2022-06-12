@@ -1,50 +1,66 @@
 [
   {
-    "name": "Aceite Motul",
-    "price": 250,
-    "thumbnailUrl": "./assets/img/aceiteMotul.jpg",
-    "description": "250ml de aceite de primera calidad.",
+    "name": "Aceite Motul 10w40",
+    "price": 1864,
+    "thumbnailUrl": "./assets/img/aceiteMotul.png",
+    "description": "Aceite de motor semi-sintetico con presentación en bidón de 1L. Origen Francia.",
     "category": "varios",
     "id": 1
   },
   {
-    "name": "Bujia",
-    "price": 180,
-    "thumbnailUrl": "./assets/img/bujia.jpg",
-    "description": "Bujia para motocicleta de 110cc.",
+    "name": "Bujia NGK c6hsa",
+    "price": 489,
+    "thumbnailUrl": "./assets/img/bujia.png",
+    "description": "Bujia de tipo compacto con diametro de rosca de 14mm, tamaño del hexagono 20,8mm. Origen Brasil.",
     "category": "mecanicos",
     "id": 2
   },
   {
-    "name": "Bateria",
-    "price": 390,
-    "thumbnailUrl": "./assets/img/bateria.jpg",
-    "description": "Bateria gel para motocicleta.",
+    "name": "Bateria Exide GEL",
+    "price": 3450,
+    "thumbnailUrl": "./assets/img/bateria.png",
+    "description": "Bateria con voltaje de 12V, y amperage 5A con 111L de volumen de electrolitos. Origen China",
     "category": "electronicos",
     "id": 3
   },
   {
-    "name": "Aros",
-    "price": 200,
-    "thumbnailUrl": "./assets/img/aros.jpg",
-    "description": "Kit de aros para piston de motocicleta.",
+    "name": "Kit Piston Osaka",
+    "price": 1010,
+    "thumbnailUrl": "./assets/img/aros.png",
+    "description": "Piston fundido con diametro interno de 1mm, incluye anillos de aceite y perno. Origen China",
     "category": "mecanicos",
     "id": 4
   },
   {
-    "name": "Cubierta",
-    "price": 475,
-    "thumbnailUrl": "./assets/img/cubierta.jpg",
-    "description": "Los neumáticos Rinaldi están orientados a la economía.",
+    "name": "Cubierta Rinaldi R34",
+    "price": 14720,
+    "thumbnailUrl": "./assets/img/cubierta.png",
+    "description": "Cubierta de posición trasera con tamaño 120/80-18 incluye cámara. Origen Brasil",
     "category": "mecanicos",
     "id": 5
   },
   {
-    "name": "Aceite Castrol",
-    "price": 195,
-    "thumbnailUrl": "./assets/img/aceiteCastrol.jpg",
-    "description": "250ml de aceite de no tan primera calidad (?) .",
+    "name": "Aceite Castrol 15w50",
+    "price": 1300,
+    "thumbnailUrl": "./assets/img/aceiteCastrol.png",
+    "description": "Aceite de motor semi-sintetico con presentación en bidón de 1L. Origen Inglaterra.",
     "category": "varios",
     "id": 6
+  },
+  {
+    "name": "Lampara Cree H4",
+    "price": 3329,
+    "thumbnailUrl": "./assets/img/led.png",
+    "description": "Lampara Cree Led H4 alta y baja con ojo de angel incorporado y voltaje de 12V. Origen China.",
+    "category": "electronicos",
+    "id": 7
+  },
+  {
+    "name": "Luces de giro",
+    "price": 1295,
+    "thumbnailUrl": "./assets/img/giro.png",
+    "description": "LEDs con cuerpo plastico de alta calidad, bajo consumo de energía, más duradera que las luces convencionales. Origen China.",
+    "category": "electronicos",
+    "id": 8
   }
 ]

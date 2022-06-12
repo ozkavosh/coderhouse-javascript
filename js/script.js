@@ -4,6 +4,7 @@ const w = window;
 const rangoFiltro = d.getElementById("rangoPrecio");
 const valorRango = d.getElementById("valorRangoFiltro");
 const contenedorProductos = d.getElementById("contenedorProductos");
+const contenedorMotos = d.getElementById("contenedorMotos");
 const inputBuscar = d.getElementById("inputBuscar");
 
 const fetchProductos = async () => {
@@ -15,6 +16,21 @@ const fetchProductos = async () => {
     return [];
   }
 };
+
+const fetchMotos = async () => {
+  try {
+    const motos = await fetch("./js/motos.json");
+    return await motos.json();
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
+const fetchProductoPorId = async (idBuscado) => {
+  const productos = await fetchProductos();
+  return productos.find(({id}) => id == idBuscado);
+}
 
 const alertErrorBusqueda = {
   title: "Error al buscar",
@@ -189,9 +205,31 @@ const finalizarCompra = (e) => {
     : swal(alertErrorCompra);
 };
 
+const mostrarDetalle = async (e) => {
+  if(!e.target.matches(".btnVerDetalle")) return;
+  const id = e.target.dataset.id;
+  const modal = document.querySelector('.modal-body');
+  modal.innerHTML = productDetail(await fetchProductoPorId(id));
+  const detail = new bootstrap.Modal('#detalle', { focus: true });
+  detail.show();
+}
+
+const renderMotos = async () => {
+  const motos = await fetchMotos();
+
+  motos.forEach((moto, index) => {
+    const slice = d.createElement('div');
+    slice.classList = index ? "carousel-item" : "carousel-item active";
+    slice.innerHTML = motoCard(moto);
+    contenedorMotos.appendChild(slice);
+  })
+}
+
 /*Bindeo a eventos*/
 w.addEventListener("load", () => {
-  renderProductos(), carrito.renderCarrito();
+  renderProductos(); 
+  carrito.renderCarrito();
+  renderMotos();
 });
 
 d.addEventListener("click", (e) => {
@@ -201,6 +239,7 @@ d.addEventListener("click", (e) => {
   buscarProductos(e);
   filtrarProductos(e);
   finalizarCompra(e);
+  mostrarDetalle(e);
 });
 
 d.addEventListener("input", (e) => {

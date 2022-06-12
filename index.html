@@ -32,7 +32,7 @@
       data-bs-toggle="offcanvas"
       data-bs-target="#offcanvasExample"
       aria-controls="offcanvasExample"
-    ></button>
+    > </button>
 
     <!-- Carrito -->
     <div
@@ -63,9 +63,10 @@
           <tbody id="bodyCarrito"></tbody>
         </table>
 
-        <h6>Precio bruto: $<span id="carritoBruto">0</span></h6>
-        <h6>Precio neto: $<span id="carritoNeto">0</span></h6>
-        <a class="btn btn-warning btnComprar" href="#">Finalizar compra</a>
+        <h6>Total: $<span id="carritoTotal">0</span></h6>
+        <a class="btn btn-warning btnComprar w-100" href="#"
+          >Finalizar compra</a
+        >
       </div>
     </div>
 
@@ -84,67 +85,28 @@
       <!-- Fin Header -->
       <div
         id="carouselExampleControls"
-        class="carousel slide container"
+        class="carousel slide container carousel-fade"
         data-bs-ride="carousel"
       >
-        <div class="carousel-inner overflow-visible">
-          <div class="carousel-item active">
-            <div class="row align-items-center flex-column flex-md-row">
-              <div class="col order-last order-md-first">
-                <div class="row align-items-center">
-                  <div class="col text-white">
-                    <h4>HONDA</h4>
-                  </div>
-                </div>
-                <div class="row align-items-center">
-                  <div class="col-auto text-white">
-                    <h4 class="fs-1">CB1100</h4>
-                  </div>
-                </div>
+        <div class="carousel-inner overflow-visible" id="contenedorMotos">
 
-                <div class="row align-items-center">
-                  <div class="col-auto text-white">
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Natus minus quae distinctio laudantium atque veritatis vel
-                      et repellat quia ducimus tenetur commodi, suscipit
-                      provident ex placeat voluptate perspiciatis possimus
-                      deleniti.
-                    </p>
-                  </div>
-                </div>
-
-                <div class="row align-items-center">
-                  <div class="col-auto text-white">
-                    <h5 class="fs-3">$9999.99</h5>
-                  </div>
-                </div>
-
-                <div class="row align-items-center mt-2 mb-4">
-                  <div class="col-auto text-white">
-                    <button class="btn btn-warning">Más información</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col imgMoto">
-                <img
-                  src="./assets/img/honda.png"
-                  alt="imagen de moto"
-                  class="img-fluid"
-                />
-              </div>
-            </div>
-          </div>
         </div>
       </div>
-      <!-- Fin Banner -->
     </div>
+    <!-- Fin Banner -->
 
     <!-- Contenedor Principal -->
     <div class="container">
       <div class="row">
-        <button class="btn btn-warning" data-bs-toggle="collapse" data-bs-target="#opciones" aria-expanded="false" aria-controls="opciones"><i class="bi bi-filter"> </i>Ver Opciones</button>
+        <button
+          class="btn btn-warning"
+          data-bs-toggle="collapse"
+          data-bs-target="#opciones"
+          aria-expanded="false"
+          aria-controls="opciones"
+        >
+          <i class="bi bi-filter"> </i>Ver Opciones
+        </button>
       </div>
     </div>
     <div class="container collapse" id="opciones">
@@ -187,13 +149,13 @@
               <input
                 type="range"
                 class="form-range"
-                value="180"
-                min="180"
-                max="999"
+                value="500"
+                min="500"
+                max="15000"
                 id="rangoPrecio"
-                step="5"
+                step="100"
               />
-              <output id="valorRangoFiltro">180</output>
+              <output id="valorRangoFiltro">500</output>
             </div>
             <div class="d-flex gap-1">
               <button class="btn btn-warning btnFiltrar">Aplicar</button>
@@ -202,9 +164,16 @@
           </form>
         </div>
 
-        <div class="col-12 col-lg-4 p-3 border bg-light d-flex flex-column justify-content-center">
+        <div
+          class="col-12 col-lg-4 p-3 border bg-light d-flex flex-column justify-content-center"
+        >
           <h4>Buscar</h4>
-          <input type="text" placeholder="Nombre del producto" class="form-control" id="inputBuscar">
+          <input
+            type="text"
+            placeholder="Nombre del producto"
+            class="form-control"
+            id="inputBuscar"
+          />
           <button class="btn btn-warning btnBuscar mt-2">Buscar</button>
         </div>
       </div>
@@ -216,12 +185,67 @@
         <div class="p-3">
           <div
             id="contenedorProductos"
-            class="row row-cols-auto g-4 justify-content-center justify-content-sm-start"
+            class="row row-cols-auto g-4 justify-content-center"
           ></div>
         </div>
       </div>
       <!-- Fin Contenedor Productos -->
     </div>
+
+    <!-- Footer -->
+    <div
+      class="container-fluid p-3"
+      style="background-image: url('./assets/img/fondo.jpg')"
+    >
+      <div class="container">
+        <div class="row align-items-center flex-lg-row flex-column">
+          <div class="col">
+            <a href="#" class="text-decoration-none"
+              ><h2 class="text-white text-uppercase fw-bold d-inline-block">
+                Raiders<span class="text-warning">Motos</span>
+              </h2></a
+            >
+          </div>
+
+          <div class="col">
+            <p class="text-white text-uppercase">
+              San Miguel de Tucumán 2022. Todos los derechos reservados.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Fin footer -->
+
+    <!-- Modal Detalle -->
+    <div
+      class="modal fade"
+      id="detalle"
+      tabindex="-1"
+      aria-labelledby="detalleLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-warning">
+            <h5
+              class="modal-title fw-bold text-uppercase text-light"
+              id="detalleLabel"
+            >
+              Detalle del producto
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Fin Modal Detalle -->
 
     <!-- BOOTSTRAP Y POPPER -->
     <script
