@@ -35,7 +35,7 @@ const productCard = ({name, price, description, id, thumbnailUrl}) => {
               />
             </li>
             <li class="list-group-item">
-              <a href="#" class="btn btn-warning btnAgregar" data-id=${id}>Agregar al carrito</a>
+              <a class="btn btn-warning btnAgregar" data-id=${id}>Agregar al carrito</a>
             </li>
           </ul>
         </div>`;
