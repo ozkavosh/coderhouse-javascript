@@ -3,19 +3,19 @@
   top: 2rem;
 }
 
-.cartWidget{
+.cartWidget {
   position: fixed;
   top: 90%;
   left: 94.5%;
   z-index: 999;
 }
 
-#btnCarrito {
+#cartWidgetButton {
   font-size: 25px;
   padding: 1rem;
 }
 
-.cartCount{
+.cartWidgetCount {
   font-size: 0.7rem;
   background-color: black;
   position: absolute;
@@ -38,7 +38,7 @@
   border-radius: 3rem;
 }
 
-.contenedorBanner {
+.bannerContainer {
   height: fit-content;
   background-image: url("../assets/img/fondo.jpg");
   margin-bottom: 3rem;
@@ -49,31 +49,31 @@
     position: static;
   }
 
-  .contenedorBanner{
+  .bannerContainer {
     margin-bottom: 1rem;
   }
 }
 
 @media screen and (max-width: 1199px) {
-  .cartWidget{
+  .cartWidget {
     left: 92%;
   }
 }
 
 @media screen and (max-width: 991px) {
-  .cartWidget{
+  .cartWidget {
     left: 90%;
   }
 }
 
 @media screen and (max-width: 767px) {
-  .cartWidget{
+  .cartWidget {
     left: 88%;
   }
 }
 
 @media screen and (max-width: 575px) {
-  .cartWidget{
+  .cartWidget {
     left: 83%;
   }
 }
