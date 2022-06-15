@@ -3,7 +3,8 @@
 
 Este es mi proyecto final del curso de Javascript de Coderhouse!
 Se trata de un simulador de un ecommerce de una tienda de repuestos e insumos
-para motocicletas.
+para motocicletas. Cuenta con un sistema de carrito que guarda los productos en el LocalStorage
+por lo que se mantienen al recargar la pagina.
 
 
 ## Demo

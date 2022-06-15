@@ -30,7 +30,7 @@ const alertSuccessDeleteProduct = {
 }
 
 const alertSuccessDeleteProducts = {
-  title: "Productos eliminado",
+  title: "Productos eliminados",
   text: "Se eliminaron todos los productos!",
   icon: "success",
   button: { text: "Aceptar", className: "bg-warning" },

@@ -38,38 +38,22 @@ const fetchMotorcycles = async () => {
   }
 };
 
+const validateForm = () => {
+  //Valida los campos del formulario en caso de que alguno este vacio devuelve falso
+  const name = document.querySelector("#name").value;
+  const email = document.querySelector("#email").value;
+  const address = document.querySelector("#address").value;
+  const ccNumber = document.querySelector("#ccNumber").value;
+  const ccExpDate = document.querySelector("#ccExpDate").value;
+  const ccCode = document.querySelector("#ccCode").value;
+
+  return name && email && address && ccNumber && ccExpDate && ccCode;
+};
+
 //Instancia del carrito
 const cart = new Cart(JSON.parse(localStorage.getItem("cart")) || []);
 
 /*Funciones para eventos*/
-const renderOrder = (e) => {
-  //Renderiza la orden y simula un numero de orden generado aleatoriamente
-  if (!e.target.matches(".btnPurchase")) return;
-  const formError = document.querySelector(".formError");
-
-  validateForm()
-    ? (swal({
-        ...alertSuccessPurchase,
-        text: `Gracias por su compra! Su número de pedido es: ${Math.round(
-          Math.random() * 1000 + 1
-        )}`,
-      }),
-      cart.emptyCart(),
-      purchaseModal.hide(),
-      delete purchaseModal)
-    : (formError.innerHTML = "Todos los campos son obligatorios!");
-};
-
-const renderProductDetail = async (e) => {
-  //Renderiza el modal de detalle del producto
-  if (!e.target.matches(".btnProductDetail")) return;
-  const id = e.target.dataset.id;
-  modalLabel.innerHTML = "Detalle del producto";
-  modalBody.innerHTML = productDetail(await fetchProductById(id));
-  const detail = new bootstrap.Modal("#modal", { focus: true });
-  detail.show();
-};
-
 const renderMotos = async () => {
   //Renderiza los slices del carrusel de motos
   const motorcycles = await fetchMotorcycles();
@@ -85,26 +69,6 @@ const renderMotos = async () => {
   const tooltipList = [...buttons].map((btn) => new bootstrap.Tooltip(btn, {}));
 };
 
-const renderProducts = async () => {
-  //Renderiza los productos dentro del contenedor de productos.
-  const products = await fetchProducts();
-  createProducts(products);
-};
-
-const renderFilterRangeValue = ({ target }) => {
-  if (!target.matches("#filterMaxPriceRange")) return;
-  //Muestra el valor del rango.
-  filterMaxPriceOutput.value = filterMaxPriceRange.value;
-};
-
-const renderPurchaseDetail = () => {
-  //Renderiza el modal del formulario de compra
-  modalLabel.innerHTML = "Detalle de compra";
-  modalBody.innerHTML = purchaseDetail();
-  purchaseModal = new bootstrap.Modal("#modal", { focus: true });
-  purchaseModal.show();
-};
-
 const createProducts = (productsArray) => {
   //Crea productos dado un array dentro del contenedor de productos
   productsContainer.innerHTML = "";
@@ -115,6 +79,12 @@ const createProducts = (productsArray) => {
     productElement.innerHTML = productCard(item);
     productsContainer.appendChild(productElement);
   });
+};
+
+const renderProducts = async () => {
+  //Renderiza los productos dentro del contenedor de productos.
+  const products = await fetchProducts();
+  createProducts(products);
 };
 
 const addToCart = async ({
@@ -152,6 +122,34 @@ const addToCart = async ({
   }).showToast();
 };
 
+const renderProductDetail = async (e) => {
+  //Renderiza el modal de detalle del producto
+  if (!e.target.matches(".btnProductDetail")) return;
+  const id = e.target.dataset.id;
+  modalLabel.innerHTML = "Detalle del producto";
+  modalBody.innerHTML = productDetail(await fetchProductById(id));
+  const detail = new bootstrap.Modal("#modal", { focus: true });
+  detail.show();
+};
+
+const renderOrder = (e) => {
+  //Renderiza la orden y simula un numero de orden generado aleatoriamente
+  if (!e.target.matches(".btnPurchase")) return;
+  const formError = document.querySelector(".formError");
+
+  validateForm()
+    ? (swal({
+        ...alertSuccessPurchase,
+        text: `Gracias por su compra! Su número de pedido es: ${Math.round(
+          Math.random() * 1000 + 1
+        )}`,
+      }),
+      cart.emptyCart(),
+      purchaseModal.hide(),
+      delete purchaseModal)
+    : (formError.innerHTML = "Todos los campos son obligatorios!");
+};
+
 const deleteFromCart = async ({
   target,
   srcElement: {
@@ -162,12 +160,24 @@ const deleteFromCart = async ({
   //Elimina un producto del carrito, despues renderiza
 
   const option = await swal(alertConfirmDeleteProduct);
-  switch (option) {
-    case "confirm":
-      cart.deleteItem(Number(id));
-      swal(alertSuccessDeleteProduct);
-      break;
-  }
+  option === "confirm" && (cart.deleteItem(Number(id)),swal(alertSuccessDeleteProduct));
+};
+
+const clearCart = async (e) => {
+  //Vacia el carrito y renderiza
+  if(!e.target.matches(".btnClearCart")) return;
+  if(!cart.itemQuantity) return swal(alertErrorCart);
+
+  const option = await swal(alertConfirmDeleteProducts);
+  option === "confirm" && (cart.emptyCart(),swal(alertSuccessDeleteProducts));
+}
+
+const renderPurchaseDetail = () => {
+  //Renderiza el modal del formulario de compra
+  modalLabel.innerHTML = "Detalle de compra";
+  modalBody.innerHTML = purchaseDetail();
+  purchaseModal = new bootstrap.Modal("#modal", { focus: true });
+  purchaseModal.show();
 };
 
 const productSearch = async (e) => {
@@ -230,32 +240,11 @@ const completePurchase = (e) => {
   cart.itemQuantity ? renderPurchaseDetail() : swal(alertErrorCart);
 };
 
-const validateForm = () => {
-  //Valida los campos del formulario en caso de que alguno este vacio devuelve falso
-  const name = document.querySelector("#name").value;
-  const email = document.querySelector("#email").value;
-  const address = document.querySelector("#address").value;
-  const ccNumber = document.querySelector("#ccNumber").value;
-  const ccExpDate = document.querySelector("#ccExpDate").value;
-  const ccCode = document.querySelector("#ccCode").value;
-
-  return name && email && address && ccNumber && ccExpDate && ccCode;
+const renderFilterRangeValue = ({ target }) => {
+  if (!target.matches("#filterMaxPriceRange")) return;
+  //Muestra el valor del rango.
+  filterMaxPriceOutput.value = filterMaxPriceRange.value;
 };
-
-const clearCart = async (e) => {
-  //Vacia el carrito y renderiza
-  if(!e.target.matches(".btnClearCart")) return;
-
-  if(!cart.itemQuantity) return swal(alertErrorCart);
-
-  const option = await swal(alertConfirmDeleteProducts);
-  switch (option) {
-    case "confirm":
-      cart.emptyCart();
-      swal(alertSuccessDeleteProducts);
-      break;
-  }
-}
 
 /*Bindeo a eventos*/
 window.addEventListener("load", () => {
