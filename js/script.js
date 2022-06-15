@@ -6,6 +6,9 @@ const valorRango = d.getElementById("valorRangoFiltro");
 const contenedorProductos = d.getElementById("contenedorProductos");
 const contenedorMotos = d.getElementById("contenedorMotos");
 const inputBuscar = d.getElementById("inputBuscar");
+const modalBody = d.querySelector(".modal-body");
+const modalLabel = d.querySelector("#modal-label");
+let modalCompra;
 
 const fetchProductos = async () => {
   try {
@@ -29,35 +32,38 @@ const fetchMotos = async () => {
 
 const fetchProductoPorId = async (idBuscado) => {
   const productos = await fetchProductos();
-  return productos.find(({id}) => id == idBuscado);
-}
+  return productos.find(({ id }) => id == idBuscado);
+};
 
 const alertErrorBusqueda = {
   title: "Error al buscar",
   text: "No se encontraron productos relacionados con la busqueda!",
   icon: "error",
-  button: "Aceptar",
+  button: { text: "Aceptar", className: "bg-warning" },
+  className: "bg-light",
 };
 
 const alertErrorFiltro = {
   title: "Error al filtrar",
   text: "No se encontraron productos con estos filtros!",
   icon: "error",
-  button: "Aceptar",
+  button: { text: "Aceptar", className: "bg-warning" },
+  className: "bg-light",
 };
 
 const alertExitoCompra = {
   title: "Compra exitosa",
-  text: "Gracias por tu compra!",
   icon: "success",
-  button: "Aceptar",
+  button: { text: "Aceptar", className: "bg-warning btnAceptarPedido" },
+  className: "bg-light",
 };
 
 const alertErrorCompra = {
   title: "Error al comprar",
   text: "Su carrito esta vacio!",
   icon: "error",
-  button: "Aceptar",
+  button: { text: "Aceptar", className: "bg-warning" },
+  className: "bg-light",
 };
 
 //Instanciamos el carrito
@@ -196,38 +202,83 @@ const filtrarProductos = async (e) => {
     : (swal(alertErrorFiltro), renderProductos());
 };
 
+const mostrarDetalleCompra = () => {
+  modalLabel.innerHTML = "Detalle de compra";
+  modalBody.innerHTML = purchaseDetail();
+  modalCompra = new bootstrap.Modal("#modal", { focus: true });
+  modalCompra.show();
+};
+
 const finalizarCompra = (e) => {
-  if (!e.target.matches(".btnComprar")) return;
+  if (!e.target.matches(".btnFinalizarCompra")) return;
   e.preventDefault();
 
   carrito.getCantidadProductos()
-    ? (swal(alertExitoCompra), carrito.vaciarCarrito())
+    ? mostrarDetalleCompra()
     : swal(alertErrorCompra);
 };
 
+const validarForm = () => {
+  const nombre = d.querySelector("#nombre").value;
+  const correo = d.querySelector("#correo").value;
+  const direccion = d.querySelector("#direccion").value;
+  const tarjetaNumero = d.querySelector("#tarjetaNumero").value;
+  const tarjetaFecha = d.querySelector("#tarjetaFecha").value;
+  const tarjetaCodigo = d.querySelector("#tarjetaCodigo").value;
+
+  return (
+    nombre &&
+    correo &&
+    direccion &&
+    tarjetaNumero &&
+    tarjetaFecha &&
+    tarjetaCodigo
+  );
+};
+
+const mostrarPedido = (e) => {
+  if (!e.target.matches(".btnComprar")) return;
+  const formError = d.querySelector(".formError");
+
+  validarForm()
+    ? (swal({
+        ...alertExitoCompra,
+        text: `Gracias por su compra! Su número de pedido es: ${Math.round(
+          Math.random() * 1000 + 1
+        )}`,
+      }),
+      carrito.vaciarCarrito(),
+      modalCompra.hide(),
+      delete modalCompra)
+    : (formError.innerHTML = "Todos los campos son obligatorios!");
+};
+
 const mostrarDetalle = async (e) => {
-  if(!e.target.matches(".btnVerDetalle")) return;
+  if (!e.target.matches(".btnVerDetalle")) return;
   const id = e.target.dataset.id;
-  const modal = document.querySelector('.modal-body');
-  modal.innerHTML = productDetail(await fetchProductoPorId(id));
-  const detail = new bootstrap.Modal('#detalle', { focus: true });
+  modalLabel.innerHTML = "Detalle del producto";
+  modalBody.innerHTML = productDetail(await fetchProductoPorId(id));
+  const detail = new bootstrap.Modal("#modal", { focus: true });
   detail.show();
-}
+};
 
 const renderMotos = async () => {
   const motos = await fetchMotos();
 
   motos.forEach((moto, index) => {
-    const slice = d.createElement('div');
+    const slice = d.createElement("div");
     slice.classList = index ? "carousel-item" : "carousel-item active";
     slice.innerHTML = motoCard(moto);
     contenedorMotos.appendChild(slice);
-  })
-}
+  });
+
+  const botones = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+  const tooltipList = [...botones].map((btn) => new bootstrap.Tooltip(btn, {}));
+};
 
 /*Bindeo a eventos*/
 w.addEventListener("load", () => {
-  renderProductos(); 
+  renderProductos();
   carrito.renderCarrito();
   renderMotos();
 });
@@ -240,6 +291,7 @@ d.addEventListener("click", (e) => {
   filtrarProductos(e);
   finalizarCompra(e);
   mostrarDetalle(e);
+  mostrarPedido(e);
 });
 
 d.addEventListener("input", (e) => {

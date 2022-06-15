@@ -1,12 +1,18 @@
 class Carrito {
-  constructor(productos, iva = 1.65) {
+  constructor(productos, iva = 1.21) {
     this.productos = productos;
     this.IVA = iva;
   }
 
+  renderCartWidget = () => {
+    const cartCount = d.querySelector('.cartCount');
+    const cartItems = this.productos.map(({quantity}) => quantity).reduce((acc, quantity) => acc + quantity, 0);
+    cartCount.innerHTML = cartItems > 99 ? "99+" : cartItems;
+  }
+
   renderTotal = () => {
     const total = d.getElementById("carritoTotal");
-    total.innerText = this.getTotalNeto().toFixed(2);
+    total.innerText = this.getTotalNeto().toLocaleString();
   };
 
   renderCarrito = () => {
@@ -17,6 +23,7 @@ class Carrito {
       .join("\n");
     this.renderTotal();
     this.guardarLocal();
+    this.renderCartWidget();
   };
 
   cargarProducto = (nuevoProducto) => {

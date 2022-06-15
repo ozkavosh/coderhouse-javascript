@@ -2,7 +2,7 @@
   {
     "name": "CB1100",
     "brand": "Honda",
-    "price": 1864,
+    "price": 1800000,
     "thumbnailUrl": "./assets/img/honda.png",
     "description": "La nueva Honda CB1100 RS dispone de embrague anti-rebote asistido. Con las rampas deslizante y de asistencia en fundición de aluminio, para ahorrar peso, reduce el esfuerzo en la maneta y minimiza el rebote de rueda trasera debido al freno motor en reducciones rápidas.",
     "id": 1
@@ -10,7 +10,7 @@
   {
     "name": "StreetTwin",
     "brand": "Triumph",
-    "price": 1864,
+    "price": 2400000,
     "thumbnailUrl": "./assets/img/triumph.png",
     "description": "Un icono de hoy en dia. Es la Modern Classic súper-ventas de Triumph y ha evolucionado hasta alcanzar un increíble nivel de estilo y detalles.",
     "id": 2
@@ -18,7 +18,7 @@
   {
     "name": "YZF-R1",
     "brand": "Yamaha",
-    "price": 1864,
+    "price": 2150000,
     "thumbnailUrl": "./assets/img/yamaha.png",
     "description": "Con la tecnología “CROSSPLANE” derivada de la YZR-M1 que utiliza el equipo Yamaha Factory de MotoGP y un diseño realizado de principio a fin por el icono del motociclismo: Valentino Rossi, llega la nueva YZF-R1 para crear experiencias con sensaciones únicas.",
     "id": 3
